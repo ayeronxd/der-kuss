@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Kiss: Gustav Klimt in the Belvedere Gallery, Vienna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #edebe6;
+      overflow: hidden;
+      user-select: none;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    /* Belvedere Gallery Exhibition Room: Bright Neutral Museum Wall with Warm Ambient Spotlight */
+    .belvedere-gallery {
+      background:
+        radial-gradient(ellipse 75% 65% at 50% 32%, rgba(255, 255, 255, 0.55) 0%, rgba(235, 232, 224, 0.96) 55%, #ded9d0 100%),
+        #ebe8e1;
+    }
+
+    /* Museum Parquet Floor */
+    .parquet-floor {
+      background: linear-gradient(180deg, #6c4728 0%, #4a2f19 40%, #301e10 100%);
+      box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Grand Belvedere Shadowbox Picture Frame */
+    .belvedere-frame {
+      background: #111111;
+      border: 14px solid #141414;
+      box-shadow:
+        0 45px 100px -20px rgba(0, 0, 0, 0.70),
+        0 18px 40px rgba(0, 0, 0, 0.40),
+        inset 0 0 16px rgba(0, 0, 0, 0.95);
+      position: relative;
+    }
+
+    /* Inner Recessed Matte & Golden Fillet */
+    .frame-matte {
+      background: #1a1a1a;
+      padding: 12px;
+      border: 2px solid #0d0d0d;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .canvas-border-fillet {
+      border: 2.5px solid #d4af37;
+      box-shadow:
+        0 0 5px rgba(0, 0, 0, 0.8),
+        inset 0 0 14px rgba(0, 0, 0, 0.5);
+      background: #8f8045;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Scaled Up Immersive Proportions: Fills wall comfortably */
+    .art-dimensions {
+      width: min(84vh, 84vw);
+      height: min(84vh, 84vw);
+    }
+
+    /* Smooth Cross-Fade for Original vs ASCII */
+    .view-fade {
+      transition: opacity 0.35s ease-in-out;
+    }
+  </style>
+</head>
+<body class="belvedere-gallery w-screen h-screen overflow-hidden flex flex-col items-center justify-between relative">
+
+  <h1 class="sr-only">Gustav Klimt - Der Kuss (The Kiss), 1907-1908</h1>
+
+  <!-- Museum Wall & Grand Centered Square Masterpiece -->
+  <main class="w-full flex-1 flex flex-col items-center justify-center p-1 sm:p-3 z-10">
+
+    <!-- The Belvedere Picture Frame -->
+    <div class="belvedere-frame flex flex-col items-center rounded-[2px]">
+      <div class="frame-matte">
+        <!-- Natural Square Composition matching Gustav Klimt's 180x180cm Masterpiece -->
+        <div id="art-container" class="canvas-border-fillet relative art-dimensions aspect-square">
+          
+          <!-- View 1: Original High-Resolution Square Masterpiece -->
+          <img id="original-img" src="the-kiss.jpg" alt="Gustav Klimt - The Kiss" class="absolute inset-0 block w-full h-full object-cover view-fade opacity-0" />
+
+          <!-- View 2: High-Density Square ASCII Art Canvas -->
+          <canvas id="ascii-canvas" class="absolute inset-0 block w-full h-full view-fade opacity-100 pointer-events-none"></canvas>
+
+          <!-- Floating Golden Stardust Particle Overlay (Runs over both views) -->
+          <canvas id="particles-canvas" class="absolute inset-0 block w-full h-full pointer-events-none"></canvas>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Museum Parquet Base with Exhibition Info & Controls -->
+  <footer class="w-full parquet-floor py-1.5 px-4 sm:px-6 flex flex-wrap items-center justify-between text-[#e8d5b5]/90 border-t border-[#8c5e34]/60 z-20 gap-1 min-h-[40px]">
+    
+    <!-- Artwork Info Plaque -->
+    <div class="flex items-center gap-3">
+      <div>
+        <p class="font-['Cinzel'] tracking-[0.16em] text-[11px] sm:text-[12.5px] font-bold text-[#f7e7ce] uppercase leading-none">
+          Gustav Klimt <span class="opacity-60 font-sans font-normal text-[10px] sm:text-[11px] lowercase tracking-normal">der kuss (1907–1908)</span>
+        </p>
+        <p class="text-[9px] sm:text-[10.5px] text-[#c9b18c] font-sans mt-0.5 opacity-85">
+          Österreichische Galerie Belvedere, Wien • 180 × 180 cm (Öl und Blattgold auf Leinwand)
+        </p>
+      </div>
+    </div>
+
+    <!-- Controls: Original/ASCII Switcher, Audio, Ambiance -->
+    <div class="flex items-center gap-2">
+      
+      <!-- View Mode Toggle: Original vs ASCII -->
+      <div class="flex items-center bg-[#24160c]/90 rounded p-0.5 border border-[#d4af37]/40 text-[11px]">
+        <button id="btn-original" class="px-3 py-1 rounded text-[#fef08a]/80 hover:text-[#fef08a] transition-all">
+          Original
+        </button>
+        <button id="btn-ascii" class="px-3 py-1 rounded bg-[#d4af37] text-[#1f1609] font-semibold transition-all shadow-sm">
+          ASCII
+        </button>
+      </div>
+
+      <!-- Hidden Background Audio (audio.mp3) with Tab-Visibility Auto-Pause -->
+      <audio id="bg-audio" src="audio.mp3" preload="auto" loop></audio>
+
+      <!-- Music Play/Pause Toggle -->
+      <button id="toggle-audio" class="flex items-center gap-1.5 px-3 py-1 rounded bg-[#24160c]/80 border border-[#d4af37]/40 text-[#fef08a] text-[11px] hover:bg-[#342012] transition-colors focus:outline-none focus:ring-1 focus:ring-[#facc15]" aria-label="Toggle exhibition music playback" title="Toggle music playback (M key)">
+        <span id="audio-icon">♪</span>
+        <span id="audio-text">Music: Playing</span>
+      </button>
+
+    </div>
+
+  </footer>
+
+  <script>
+    /**
+     * =========================================================================
+     * GUSTAV KLIMT "THE KISS" - GRAND BELVEDERE EXHIBITION
+     * IMMERSIVE SCALE • TRUE 1:1 SQUARE ASPECT RATIO
+     * DUAL "ORIGINAL / ASCII" TOGGLE & TAB-VISIBILITY AUDIO AUTO-PAUSE
+     * =========================================================================
+     */
+
+    const state = {
+      viewMode: 'ascii', // 'original' or 'ascii'
+      cellSize: 4.2,        // High-density ASCII cells for crisp contours & facial expression
+      edges: 0.74,          // Sobel edge sensitivity
+      bgTint: 0.36,         // Warm antique olive-gold canvas background tint
+      vividBoost: 1.28,     // Radiant gold leaf and jewel vibrancy
+      isAnimated: false
+    };
+
+    const DENSITY_RAMP = " .:-=+*#%@08$S";
+
+    // DOM Elements
+    const originalImg = document.getElementById('original-img');
+    const asciiCanvas = document.getElementById('ascii-canvas');
+    const asciiCtx = asciiCanvas.getContext('2d', { alpha: false });
+    const particlesCanvas = document.getElementById('particles-canvas');
+    const particlesCtx = particlesCanvas.getContext('2d');
+
+    const btnOriginal = document.getElementById('btn-original');
+    const btnAscii = document.getElementById('btn-ascii');
+
+    const bgAudio = document.getElementById('bg-audio');
+    const toggleAudioBtn = document.getElementById('toggle-audio');
+    const audioIcon = document.getElementById('audio-icon');
+    const audioText = document.getElementById('audio-text');
+
+    // Offscreen sampling canvas
+    const sampleCanvas = document.createElement('canvas');
+    const sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+
+    function mulberry32(seed) {
+      return function () {
+        let t = (seed += 0x6d2b79f5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    // =========================================================================
+    // "ORIGINAL / ASCII" TOGGLE SWITCHER
+    // =========================================================================
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      if (mode === 'original') {
+        originalImg.classList.remove('opacity-0');
+        originalImg.classList.add('opacity-100');
+        asciiCanvas.classList.remove('opacity-100');
+        asciiCanvas.classList.add('opacity-0');
+
+        btnOriginal.className = "px-3 py-1 rounded bg-[#d4af37] text-[#1f1609] font-semibold transition-all shadow-sm";
+        btnAscii.className = "px-3 py-1 rounded text-[#fef08a]/80 hover:text-[#fef08a] transition-all";
+
+        // Enable ambiance when switching to original
+        if (!state.isAnimated) {
+          state.isAnimated = true;
+          requestAnimationFrame(animationLoop);
+        }
+      } else {
+        originalImg.classList.remove('opacity-100');
+        originalImg.classList.add('opacity-0');
+        asciiCanvas.classList.remove('opacity-0');
+        asciiCanvas.classList.add('opacity-100');
+
+        btnAscii.className = "px-3 py-1 rounded bg-[#d4af37] text-[#1f1609] font-semibold transition-all shadow-sm";
+        btnOriginal.className = "px-3 py-1 rounded text-[#fef08a]/80 hover:text-[#fef08a] transition-all";
+
+        // Disable ambiance in ASCII mode
+        state.isAnimated = false;
+        particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+
+        renderAsciiArt();
+      }
+    }
+
+    btnOriginal.addEventListener('click', () => setViewMode('original'));
+    btnAscii.addEventListener('click', () => setViewMode('ascii'));
+
+    // =========================================================================
+    // HIGH-DENSITY SQUARE ASCII ART PIPELINE
+    // =========================================================================
+    let gridCols = 0;
+    let gridRows = 0;
+    let charW = 0;
+    let charH = 0;
+
+    function renderAsciiArt() {
+      if (!originalImg.complete || originalImg.naturalWidth === 0) return;
+
+      const container = document.getElementById('art-container');
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 800;
+
+      charW = state.cellSize * 0.62;
+      charH = state.cellSize;
+
+      gridCols = Math.max(24, Math.floor(w / charW));
+      gridRows = Math.max(24, Math.floor(h / charH));
+
+      asciiCanvas.width = Math.floor(gridCols * charW);
+      asciiCanvas.height = Math.floor(gridRows * charH);
+
+      sampleCanvas.width = gridCols;
+      sampleCanvas.height = gridRows;
+
+      // Sample directly from the square source image (full 1:1 painting)
+      sampleCtx.drawImage(originalImg, 0, 0, gridCols, gridRows);
+      const imgData = sampleCtx.getImageData(0, 0, gridCols, gridRows).data;
+      const total = gridCols * gridRows;
+
+      const lum = new Float32Array(total);
+      for (let i = 0; i < total; i++) {
+        const idx = i * 4;
+        lum[i] = (0.299 * imgData[idx] + 0.587 * imgData[idx + 1] + 0.114 * imgData[idx + 2]) / 255.0;
+      }
+
+      const magArr = new Float32Array(total);
+      const edgeCharArr = new Array(total);
+      const edgeGlyphs = ["-", "\\", "|", "/"];
+
+      for (let y = 0; y < gridRows; y++) {
+        const ym1 = Math.max(0, y - 1);
+        const yp1 = Math.min(gridRows - 1, y + 1);
+        for (let x = 0; x < gridCols; x++) {
+          const xm1 = Math.max(0, x - 1);
+          const xp1 = Math.min(gridCols - 1, x + 1);
+
+          const tl = lum[ym1 * gridCols + xm1];
+          const tc = lum[ym1 * gridCols + x];
+          const tr = lum[ym1 * gridCols + xp1];
+          const ml = lum[y * gridCols + xm1];
+          const mr = lum[y * gridCols + xp1];
+          const bl = lum[yp1 * gridCols + xm1];
+          const bc = lum[yp1 * gridCols + x];
+          const br = lum[yp1 * gridCols + xp1];
+
+          const gx = (tr + 2 * mr + br) - (tl + 2 * ml + bl);
+          const gy = (bl + 2 * bc + br) - (tl + 2 * tc + tr);
+
+          const mag = Math.hypot(gx, gy) / 4.0;
+          const idx = y * gridCols + x;
+          magArr[idx] = mag;
+
+          let deg = (Math.atan2(gy, gx) * (180 / Math.PI) + 90.0) % 180.0;
+          if (deg < 0) deg += 180.0;
+          const sector = Math.floor(((deg + 22.5) % 180.0) / 45.0);
+          edgeCharArr[idx] = edgeGlyphs[sector];
+        }
+      }
+
+      const ctx = asciiCtx;
+      ctx.fillStyle = '#7a6b32';
+      ctx.fillRect(0, 0, asciiCanvas.width, asciiCanvas.height);
+
+      ctx.font = `700 ${state.cellSize}px "JetBrains Mono", monospace`;
+      ctx.textBaseline = 'top';
+
+      const edgeThreshold = 0.8 - 0.6 * state.edges;
+      const rampLen = DENSITY_RAMP.length - 1;
+      const boost = state.vividBoost;
+      const bgTint = state.bgTint;
+
+      for (let y = 0; y < gridRows; y++) {
+        const py = y * charH;
+        for (let x = 0; x < gridCols; x++) {
+          const i = y * gridCols + x;
+          const idx = i * 4;
+
+          const r = imgData[idx];
+          const g = imgData[idx + 1];
+          const b = imgData[idx + 2];
+          const l = lum[i];
+
+          let glyph;
+          if (magArr[i] > edgeThreshold && l > 0.18) {
+            glyph = edgeCharArr[i];
+          } else {
+            const rampIdx = Math.min(rampLen, Math.floor(l * (rampLen + 0.99)));
+            glyph = DENSITY_RAMP[rampIdx];
+          }
+
+          if (glyph === ' ') glyph = '.';
+
+          // Vivid saturation boost
+          const avg = (r + g + b) / 3.0;
+          const vR = Math.max(0, Math.min(255, avg + (r - avg) * boost));
+          const vG = Math.max(0, Math.min(255, avg + (g - avg) * boost));
+          const vB = Math.max(0, Math.min(255, avg + (b - avg) * boost));
+
+          const v = Math.max(vR, vG, vB, 1.0);
+          const scale = (255.0 / v) * 0.65;
+          const fgR = Math.min(255, Math.round(vR * 0.35 + vR * scale));
+          const fgG = Math.min(255, Math.round(vG * 0.35 + vG * scale));
+          const fgB = Math.min(255, Math.round(vB * 0.35 + vB * scale));
+
+          const px = x * charW;
+
+          if (bgTint > 0.005) {
+            const bgR = Math.min(255, Math.round(r * bgTint * 1.15));
+            const bgG = Math.min(255, Math.round(g * bgTint * 1.05));
+            const bgB = Math.min(255, Math.round(b * bgTint * 0.60));
+            ctx.fillStyle = `rgb(${bgR},${bgG},${bgB})`;
+            ctx.fillRect(px, py, charW + 0.5, charH + 0.5);
+          }
+
+          ctx.fillStyle = `rgb(${fgR},${fgG},${fgB})`;
+          ctx.fillText(glyph, px, py);
+        }
+      }
+    }
+
+    // =========================================================================
+    // FLOATING GOLD LEAF STARDUST PARTICLES (Warm Ambient Overlay)
+    // =========================================================================
+    const particles = [];
+    const NUM_PARTICLES = 50;
+
+    function initParticles(w, h) {
+      particles.length = 0;
+      const rand = mulberry32(1908);
+      for (let i = 0; i < NUM_PARTICLES; i++) {
+        particles.push({
+          x: rand() * w,
+          y: rand() * h,
+          vx: (rand() - 0.5) * 0.2,
+          vy: -(0.22 + rand() * 0.48),
+          baseRadius: 1.2 + rand() * 2.8,
+          phase: rand() * Math.PI * 2,
+          speed: 0.0014 + rand() * 0.0018,
+          colorType: Math.floor(rand() * 4)
+        });
+      }
+    }
+
+    const particleTones = [
+      { r: 255, g: 235, b: 59 },  // Pure Radiant Gold
+      { r: 251, g: 192, b: 45 },  // Warm Amber
+      { r: 255, g: 249, b: 196 }, // Champagne Gold
+      { r: 255, g: 183, b: 77 }   // Warm Ochre
+    ];
+
+    function renderParticles(time) {
+      const w = particlesCanvas.width;
+      const h = particlesCanvas.height;
+      const ctx = particlesCtx;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (!state.isAnimated) return;
+
+      // Soft breathing warm ambient gold glow
+      const breath = 0.5 + 0.5 * Math.sin(time * 0.0006);
+      const glowGrad = ctx.createRadialGradient(
+        w * 0.52, h * 0.40, 30,
+        w * 0.52, h * 0.44, w * 0.65
+      );
+      glowGrad.addColorStop(0, `rgba(255, 235, 59, ${0.08 + breath * 0.05})`);
+      glowGrad.addColorStop(0.5, `rgba(251, 192, 45, ${0.04 + breath * 0.02})`);
+      glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Golden stardust motes drifting peacefully
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.y += p.vy;
+        p.x += p.vx + Math.sin(time * p.speed + p.phase) * 0.22;
+
+        if (p.y < -10) p.y = h + 10;
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+
+        const alpha = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(time * p.speed * 2 + p.phase));
+        const col = particleTones[p.colorType];
+
+        ctx.fillStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.baseRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // =========================================================================
+    // ANIMATION & TIMING LOOP
+    // =========================================================================
+    let lastRenderTime = 0;
+    const TARGET_FPS = 30;
+    const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
+    function animationLoop(timestamp) {
+      if (state.isAnimated) {
+        requestAnimationFrame(animationLoop);
+        if (timestamp - lastRenderTime < FRAME_INTERVAL) return;
+        lastRenderTime = timestamp;
+      }
+
+      renderParticles(timestamp);
+    }
+
+    function toggleAnimation() {
+      state.isAnimated = !state.isAnimated;
+      if (state.isAnimated) {
+        requestAnimationFrame(animationLoop);
+      } else {
+        particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'KeyV') {
+        setViewMode(state.viewMode === 'original' ? 'ascii' : 'original');
+      }
+    });
+
+    // =========================================================================
+    // BACKGROUND AUDIO (audio.mp3) - AUTOPLAY & TAB-SWITCH AUTO-PAUSE
+    // =========================================================================
+    bgAudio.volume = 0.8;
+    let wasPlayingBeforeTabSwitch = false;
+    let userManuallyPaused = false;
+
+    function playAudio() {
+      const promise = bgAudio.play();
+      if (promise !== undefined) {
+        promise.then(() => {
+          audioIcon.textContent = "♪";
+          audioText.textContent = "Music: Playing";
+          userManuallyPaused = false;
+        }).catch(() => {
+          audioIcon.textContent = "🔇";
+          audioText.textContent = "Click for Music";
+        });
+      }
+    }
+
+    function pauseAudio() {
+      bgAudio.pause();
+      audioIcon.textContent = "🔇";
+      audioText.textContent = "Music: Muted";
+    }
+
+    function toggleAudio() {
+      if (bgAudio.paused) {
+        playAudio();
+      } else {
+        userManuallyPaused = true;
+        pauseAudio();
+      }
+    }
+
+    toggleAudioBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAudio();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'KeyM') {
+        toggleAudio();
+      }
+    });
+
+    // TAB VISIBILITY: Pause music when leaving tab, resume when returning
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (!bgAudio.paused) {
+          bgAudio.pause();
+          wasPlayingBeforeTabSwitch = true;
+          audioIcon.textContent = "🔇";
+          audioText.textContent = "Music: Paused";
+        }
+      } else {
+        if (wasPlayingBeforeTabSwitch && !userManuallyPaused) {
+          playAudio();
+          wasPlayingBeforeTabSwitch = false;
+        }
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      if (!bgAudio.paused) {
+        bgAudio.pause();
+        wasPlayingBeforeTabSwitch = true;
+        audioIcon.textContent = "🔇";
+        audioText.textContent = "Music: Paused";
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      if (wasPlayingBeforeTabSwitch && !userManuallyPaused) {
+        playAudio();
+        wasPlayingBeforeTabSwitch = false;
+      }
+    });
+
+    const tryAutoplay = () => {
+      if (bgAudio.paused && !userManuallyPaused) {
+        playAudio();
+      }
+    };
+    ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, tryAutoplay, { once: true });
+    });
+
+    // =========================================================================
+    // RESPONSIVE RESIZE & INITIALIZATION
+    // =========================================================================
+    function updateDimensions() {
+      const container = document.getElementById('art-container');
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 800;
+
+      particlesCanvas.width = w;
+      particlesCanvas.height = h;
+      initParticles(w, h);
+
+      if (state.viewMode === 'ascii') {
+        renderAsciiArt();
+      }
+    }
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        updateDimensions();
+      }, 100);
+    });
+
+    window.onload = function () {
+      updateDimensions();
+      // Default: ASCII mode, no ambiance
+      renderAsciiArt();
+      playAudio();
+    };
+
+    if (originalImg.complete) {
+      updateDimensions();
+    } else {
+      originalImg.onload = updateDimensions;
+    }
+  </script>
+</body>
+</html>
