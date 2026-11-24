@@ -160,14 +160,14 @@
 
     const state = {
       viewMode: 'ascii', // 'original' or 'ascii'
-      cellSize: 4.2,        // High-density ASCII cells for crisp contours & facial expression
-      edges: 0.74,          // Sobel edge sensitivity
-      bgTint: 0.36,         // Warm antique olive-gold canvas background tint
-      vividBoost: 1.28,     // Radiant gold leaf and jewel vibrancy
+      cellSize: 9,          // Readable ASCII cells — characters clearly visible
+      edges: 0.68,          // Sobel edge sensitivity
+      bgTint: 0.22,         // Subtle warm tint behind chars
+      vividBoost: 1.35,     // Radiant gold leaf and jewel vibrancy
       isAnimated: false
     };
 
-    const DENSITY_RAMP = " .:-=+*#%@08$S";
+    const DENSITY_RAMP = " .'`^\":;Il!i><~+_-?][}{1)(|\\/#%@0QW";
 
     // DOM Elements
     const originalImg = document.getElementById('original-img');
@@ -251,8 +251,8 @@
       const w = container.clientWidth || 800;
       const h = container.clientHeight || 800;
 
-      charW = state.cellSize * 0.62;
-      charH = state.cellSize;
+      charW = state.cellSize * 0.55;
+      charH = state.cellSize * 1.0;
 
       gridCols = Math.max(24, Math.floor(w / charW));
       gridRows = Math.max(24, Math.floor(h / charH));
@@ -309,10 +309,10 @@
       }
 
       const ctx = asciiCtx;
-      ctx.fillStyle = '#7a6b32';
+      ctx.fillStyle = '#0d0a04';
       ctx.fillRect(0, 0, asciiCanvas.width, asciiCanvas.height);
 
-      ctx.font = `700 ${state.cellSize}px "JetBrains Mono", monospace`;
+      ctx.font = `500 ${state.cellSize}px "JetBrains Mono", monospace`;
       ctx.textBaseline = 'top';
 
       const edgeThreshold = 0.8 - 0.6 * state.edges;
